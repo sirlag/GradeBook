@@ -13,7 +13,6 @@ import java.io.*;
 public class StudentApplet extends JApplet implements ActionListener
 {
     private JRadioButton addBut, deleteBut, update, sortGPA, sortName, quit;
-    private String s;
     private Student[] grbook;
     private int maxstudents;
     private Font ubuntu, ubuntuMono;
@@ -158,7 +157,7 @@ public class StudentApplet extends JApplet implements ActionListener
     
     public void sortGpa()
     {
-        Student temp = new Student();
+        Student temp;
         for(int i = 0; i < maxstudents-1; i++)
             for(int j = i+1; j <maxstudents; j++)
                 if (grbook[i].getgpa() < grbook[j].getgpa())
@@ -171,7 +170,7 @@ public class StudentApplet extends JApplet implements ActionListener
     
     public void sortName()
     {
-        Student temp = new Student();
+        Student temp;
         for(int i = 0;i<maxstudents-1;i++)
             for(int j = i+1; j <maxstudents; j++)
                 if(grbook[i].getname().compareToIgnoreCase(grbook[j].getname())>0)
@@ -185,7 +184,7 @@ public class StudentApplet extends JApplet implements ActionListener
     
     public void add()
     {
-        JTextField g0, g1, g2, g3, g4, nameField, yearField;
+        JTextField g[], nameField, yearField;
 
         JPanel addPanel = new JPanel(new GridLayout(3,2));
         JPanel gradePanel = new JPanel(new GridLayout(1,5));
@@ -196,31 +195,40 @@ public class StudentApplet extends JApplet implements ActionListener
         addPanel.add(yearField = new JTextField());
         addPanel.add(new JLabel("Students Grades"));
 
-        gradePanel.add(g0 = new JTextField());
-        gradePanel.add(g1 = new JTextField());
-        gradePanel.add(g2 = new JTextField());
-        gradePanel.add(g3 = new JTextField());
-        gradePanel.add(g4 = new JTextField());
+        g = new JTextField[5];
+
+        gradePanel.add(g[0] = new JTextField());
+        gradePanel.add(g[1] = new JTextField());
+        gradePanel.add(g[2] = new JTextField());
+        gradePanel.add(g[3] = new JTextField());
+        gradePanel.add(g[4] = new JTextField());
 
         addPanel.add(gradePanel);
 
 
-        JOptionPane.showMessageDialog(null, addPanel, "Choose Grades", JOptionPane.QUESTION_MESSAGE);
+        JOptionPane.showMessageDialog(null, addPanel, "Create a student", JOptionPane.QUESTION_MESSAGE);
 
         String name;
-        int temp[] = new int[5], year, tempg;
+       int temp[], year;
         
-        name = JOptionPane.showInputDialog("Add a student", "Last Name, First Name");
-        year = Integer.parseInt(JOptionPane.showInputDialog("Year of Graduation", "2017"));
-        
-        for(int i = 0; i<5; i++)
-        {
-                do{
-                    tempg = Integer.parseInt(JOptionPane.showInputDialog("Grade #"+i));
-                    if (tempg > 100 || tempg < 0)
-                        JOptionPane.showMessageDialog(null, "Enter a grade between 0 and 100", "", JOptionPane.ERROR_MESSAGE);
-                } while (tempg >100 || tempg < 0); 
-        }
+        name = nameField.getText();
+
+        year = Integer.parseInt(yearField.getText());
+
+        for(int i = 0; i < 5; i++)
+            do {
+
+                if (Integer.parseInt(g[i].getText()) > 100 || Integer.parseInt(g[i].getText()) < 0)
+                {
+                    JPanel tempPanel = new JPanel();
+                    tempPanel.add(new JLabel(String.format("Grade %d is %d which is not between 0 and 100.", i+1,Integer.parseInt(g[i].getText()) )));
+                    tempPanel.add(g[i]);
+                    JOptionPane.showMessageDialog(null, tempPanel, "Grade too large", JOptionPane.ERROR_MESSAGE);
+                }
+            }while (Integer.parseInt(g[i].getText()) > 100 || Integer.parseInt(g[i].getText()) < 0);
+
+
+        temp = new int[]{Integer.parseInt(g[0].getText()),Integer.parseInt(g[1].getText()),Integer.parseInt(g[2].getText()), Integer.parseInt(g[3].getText()), Integer.parseInt(g[4].getText())};
 
         grbook[maxstudents] = new Student(name, year, temp);
         maxstudents++;
@@ -230,14 +238,14 @@ public class StudentApplet extends JApplet implements ActionListener
     public void makeFonts()
     {
         try{
-            ubuntu = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("Ubuntu-L.ttf"));
+            ubuntu = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("F:\\Java Code\\IChapter09\\src\\Ubuntu-L.ttf"));
         }
-        catch(IOException|FontFormatException e){}
+        catch(IOException|FontFormatException e){System.out.print("Error, man");}
         ubuntu = ubuntu.deriveFont(12f);
         try{
-            ubuntuMono = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("UbuntuMono-R.ttf"));
+            ubuntuMono = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("F:\\Java Code\\IChapter09\\src\\UbuntuMono-R.ttf"));
         }
-        catch(IOException|FontFormatException e){}
+        catch(IOException|FontFormatException e){System.out.print("Error in the Second Font");}
         ubuntuMono = ubuntuMono.deriveFont(12f);
     }
     
