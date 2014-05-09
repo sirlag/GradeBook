@@ -12,6 +12,7 @@ public class Student
     private int year;
     private int grades[];
     private double gpa;
+
     public Student()
     { 
         name = "";
@@ -55,6 +56,19 @@ public class Student
     public double getgpa()
     {
         return gpa;
+    }
+    
+    public int getgrade(int index)
+    {
+        if (index > 4 || index < 0)
+            return 0;
+        else
+            return grades[index];
+    }
+    
+    public int getyear()
+    {
+        return year;
     }
     
     private void calcGpa()
