@@ -90,6 +90,10 @@ public class StudentApplet extends JApplet implements ActionListener
             sortName();
         else if (addBut.isSelected())
             add();
+        else if (update.isSelected())
+            update();
+        else if (quit.isSelected())
+            System.exit(0);
             
         repaint();
     }
@@ -249,6 +253,80 @@ public class StudentApplet extends JApplet implements ActionListener
         ubuntuMono = ubuntuMono.deriveFont(12f);
     }
     
- 
+    public void update()
+    {
+        String name;
+        int i = 0;
+        
+        System.out.print("test31");
+        Object[] choices = new Object[maxstudents];
+        for(int j = 0; j<maxstudents; j++)
+            choices[j] = grbook[j].getname();
+        name = (String) JOptionPane.showInputDialog(null, "Which Student Should be updated?", "Update Student", JOptionPane.QUESTION_MESSAGE, new ImageIcon("graduate6.png") , choices, "" );
+        System.out.print("test2");
+        while(i<maxstudents && !name.equalsIgnoreCase(grbook[i].getname()))
+        {
+            i++;
+            System.out.print("i");
+        }
+            
+        if (i==maxstudents)
+        {
+            JOptionPane.showMessageDialog(null,
+                "Unable to find student " + name, "Update", JOptionPane.ERROR_MESSAGE, new ImageIcon("nope.png")); 
+            System.out.println("Here");
+        }
+        else
+        {
+            Student temp = grbook[i];
+
+            JPanel updatePanel = new JPanel(new GridLayout(3,2));
+            JPanel gradePanel = new JPanel(new GridLayout(1,5));
+            
+            JTextField g[], nameBox, yearBox;
+            
+            
+            updatePanel.add(new JLabel("Name (Last, First)"));
+            nameBox = new JTextField(temp.getname());
+            updatePanel.add(nameBox);
+            
+            updatePanel.add(new JLabel("Year of Graduation"));
+            yearBox = new JTextField(""+temp.getyear());
+            updatePanel.add(yearBox);
+            
+            g = new JTextField[5];
+
+            for (int j = 0; j < 5; j++)
+            {
+                g[j]= new JTextField(""+temp.getgrade(j));
+                gradePanel.add(g[j]);
+            }
+            
+            updatePanel.add(new JLabel("Grades"));
+            updatePanel.add(gradePanel);
+            
+            System.out.println("Here2");
+            JOptionPane.showMessageDialog(null, updatePanel, "Update a student", JOptionPane.QUESTION_MESSAGE);
+
+            int grade[] = new int[5];
+            for(int j = 0; j < 5; j++) {
+                do {
+
+                    if (Integer.parseInt(g[j].getText()) > 100 || Integer.parseInt(g[j].getText()) < 0) {
+                        JPanel tempPanel = new JPanel();
+                        tempPanel.add(new JLabel(String.format("Grade %d is %d which is not between 0 and 100.", i + 1, Integer.parseInt(g[i].getText()))));
+                        tempPanel.add(g[j]);
+                        JOptionPane.showMessageDialog(null, tempPanel, "Grade too large", JOptionPane.ERROR_MESSAGE);
+                    }
+                } while (Integer.parseInt(g[j].getText()) > 100 || Integer.parseInt(g[j].getText()) < 0);
+                grade[j] = Integer.parseInt(g[j].getText());
+            }
+
+
+
+            grbook[i] = new Student(nameBox.getText(), Integer.parseInt(yearBox.getText()),grade);
+            
+        }
+    }
     
 }
